@@ -1,0 +1,5 @@
+title: FindUsersResponse
+type: object
+description: findUsers response model
+allOf:
+  - $ref: ../schemas/User.yml

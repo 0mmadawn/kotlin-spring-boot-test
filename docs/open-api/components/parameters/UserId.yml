@@ -1,0 +1,8 @@
+name: userId
+in: path
+description: ユーザID
+required: true
+schema:
+  type: integer
+  format: int64
+example: 1

@@ -1,0 +1,106 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: User API
+  description: ユーザAPI
+  contact:
+    name: 0mmadawn
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:8080
+paths:
+  /users:
+    get:
+      description: 全てのユーザを取得する
+      operationId: findUsers
+      tags:
+        - user
+      responses:
+        '200':
+          description: 成功時のレスポンス
+          content:
+            application/json:
+              schema:
+                $ref: "components/responses/FindUsersResponse.yml"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "components/schemas/Error.yml"
+    post:
+      description: 新しいユーザを作成する
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/requests/CreateUserRequest.yml"
+      responses:
+        '201':
+          description: 成功時のレスポンス
+          content:
+            application/json:
+              schema:
+                $ref: "components/responses/CreateUserResponse.yml"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "components/schemas/Error.yml"
+  /users/{userId}:
+    get:
+      description: 指定されたIDのユーザを取得する
+      operationId: findUserById
+      parameters:
+        - $ref: "components/parameters/UserId.yml"
+      responses:
+        '200':
+          description: 成功時のレスポンス
+          content:
+            application/json:
+              schema:
+                $ref: "components/responses/FindUserResponse.yml"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "components/schemas/Error.yml"
+    patch:
+      description: 指定されたIDのユーザを更新する
+      operationId: updateUser
+      parameters:
+        - $ref: "components/parameters/UserId.yml"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./components/requests/CreateUserRequest.yml"
+      responses:
+        '200':
+          description: 成功時のレスポンス
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "components/schemas/Error.yml"
+    delete:
+      description: 指定されたIDのユーザを削除する
+      operationId: deleteUser
+      parameters:
+        - $ref: "components/parameters/UserId.yml"
+      responses:
+        '204':
+          description: 成功時のレスポンス
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "components/schemas/Error.yml"

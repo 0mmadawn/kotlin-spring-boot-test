@@ -1,0 +1,12 @@
+title: FindUsersResponse
+type: object
+description: findUsers response model
+allOf:
+  - type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: ../schemas/User.yml
+    required:
+      - data

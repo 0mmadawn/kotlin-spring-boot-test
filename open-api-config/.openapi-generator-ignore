@@ -1,0 +1,6 @@
+README.md
+build.gradle.kts
+pom.xml
+settings.gradle
+src/main/resources/application.yaml
+src/test/

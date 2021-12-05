@@ -1,0 +1,10 @@
+title: CreateUserRequest
+type: object
+description: createUser request model
+properties:
+  name:
+    type: string
+    example: john
+  email:
+    type: string
+    example: john@example.com

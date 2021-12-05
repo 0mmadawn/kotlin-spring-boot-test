@@ -1,0 +1,11 @@
+{
+  "apiSuffix": "Api",
+  "basePackage": "com.example.demo",
+  "apiPackage": "com.example.demo.web.api.controller",
+  "modelPackage": "com.example.demo.web.api.model",
+  "interfaceOnly": "true",
+  "exceptionHandler": "false",
+  "useBeanValidation": "false",
+  "enumPropertyNaming": "original",
+  "modelMutable": "true"
+}

@@ -1,0 +1,10 @@
+title: UpdateUserResponse
+type: object
+description: updateUser response model
+properties:
+  name:
+    type: string
+    example: john
+  email:
+    type: string
+    example: john@example.com

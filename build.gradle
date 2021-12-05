@@ -1,0 +1,92 @@
+plugins {
+    // spring boot
+    id "org.springframework.boot" version "2.6.0"
+    // kotlin
+    id "org.jetbrains.kotlin.jvm" version "1.6.0"
+    id "org.jetbrains.kotlin.plugin.spring" version "1.6.0"
+    // dependencyManagement
+    id "io.spring.dependency-management" version '1.0.11.RELEASE'
+    // openAPI
+    id "org.openapi.generator" version "5.3.0"
+    // https://docs.gradle.org/current/userguide/java_library_plugin.html
+    id 'java-library'
+}
+
+// https://spring.pleiades.io/spring-boot/docs/current/gradle-plugin/reference/htmlsingle/#managing-dependencies.dependency-management-plugin.using-in-isolation
+dependencyManagement {
+    imports {
+        mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+}
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-validation" // OpenAPI的に必要
+    // kotlin
+    implementation "org.jetbrains.kotlin:kotlin-reflect"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    // json lib(for API response)
+    api ("com.fasterxml.jackson.module:jackson-module-kotlin")
+    // SpringDevTools
+    developmentOnly "org.springframework.boot:spring-boot-devtools"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0")
+}
+
+test {
+    useJUnitPlatform()
+}
+
+//https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator-gradle-plugin
+openApiGenerate {
+    generatorName= "kotlin-spring"
+    inputSpec= "$rootDir/docs/open-api/index.yml"
+    outputDir= "$rootDir/out/open-api"
+    configFile = "$rootDir/open-api-config/code-generation-config.json"
+    // override template
+    // https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator/src/main/resources/kotlin-spring
+    templateDir = "$rootDir/open-api-config/templates/kotlin-spring"
+    // ignoreFileOverrideではファイルの上書きが防止されるだけで最初の生成はされてしまう
+    // ignoreFileOverride = "$rootDir/open-api-config/.openapi-generator-ignore"
+}
+tasks.openApiGenerate {
+    doFirst {
+        delete (
+            "$rootDir/out/open-api/src/main/",
+        )
+    }
+    doLast {
+        delete (
+            "$rootDir/out/open-api/README.md",
+            "$rootDir/out/open-api/build.gradle.kts",
+            "$rootDir/out/open-api/pom.xml",
+            "$rootDir/out/open-api/settings.gradle",
+            "$rootDir/out/open-api/src/main/resources/application.yaml",
+            "$rootDir/out/open-api/src/test/",
+            "$rootDir/out/open-api/.openapi-generator-ignore",
+        )
+    }
+}
+
+tasks.compileKotlin.dependsOn(tasks.openApiGenerate)
+
+sourceSets {
+    main.java.srcDirs += "$rootDir/out/open-api/src/main/kotlin"
+    main.resources.srcDirs += "$rootDir/out/open-api/src/main/resources"
+}
+
+springBoot {
+    mainClass = 'com.example.demo.DemoApplication'
+}
